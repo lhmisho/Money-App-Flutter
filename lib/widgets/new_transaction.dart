@@ -11,21 +11,42 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleInputController = TextEditingController();
 
-  final amountInputController = TextEditingController();
+  final _titleInputController = TextEditingController();
+  final _amountInputController = TextEditingController();
+  DateTime _selectedDate;
 
-  void submitedData() {
-    final enteredTitle = titleInputController.text;
-    final enteredAmount = double.parse(amountInputController.text);
+  void _submitedData() {
+    if(_amountInputController.text.isEmpty){
+      return;
+    }
+    final enteredTitle = _titleInputController.text;
+    final enteredAmount = double.parse(_amountInputController.text);
 
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
     print(enteredTitle);
     print(enteredAmount);
-    widget.transactionHandler(enteredTitle, enteredAmount);
+    widget.transactionHandler(enteredTitle, enteredAmount, _selectedDate);
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((pickedDate){
+      if(pickedDate == null){
+        return;
+      }else{
+        setState(() {
+          _selectedDate = pickedDate;
+        });
+      }
+    });
   }
 
   Widget build(BuildContext context) {
@@ -38,21 +59,21 @@ class _NewTransactionState extends State<NewTransaction> {
           children: <Widget>[
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
-              controller: titleInputController,
-              onSubmitted: (_) => submitedData(),
+              controller: _titleInputController,
+              onSubmitted: (_) => _submitedData(),
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
-              controller: amountInputController,
+              controller: _amountInputController,
               keyboardType: TextInputType.number,
-              onSubmitted: (_) => submitedData(),
+              onSubmitted: (_) => _submitedData(),
             ),
-            PickDate(),
+            PickDate(_presentDatePicker, _selectedDate),
             RaisedButton(
               child: Text('Add'),
               textColor: Theme.of(context).textTheme.button.color,
               color: Theme.of(context).primaryColor,
-              onPressed: submitedData,
+              onPressed: _submitedData,
             )
           ],
         ),
