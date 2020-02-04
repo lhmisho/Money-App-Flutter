@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './pick_date.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function transactionHandler;
@@ -46,9 +47,11 @@ class _NewTransactionState extends State<NewTransaction> {
               keyboardType: TextInputType.number,
               onSubmitted: (_) => submitedData(),
             ),
-            FlatButton(
+            PickDate(),
+            RaisedButton(
               child: Text('Add'),
-              textColor: Colors.purple,
+              textColor: Theme.of(context).textTheme.button.color,
+              color: Theme.of(context).primaryColor,
               onPressed: submitedData,
             )
           ],
