@@ -11,13 +11,12 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-
   final _titleInputController = TextEditingController();
   final _amountInputController = TextEditingController();
   DateTime _selectedDate;
 
   void _submitedData() {
-    if(_amountInputController.text.isEmpty){
+    if (_amountInputController.text.isEmpty) {
       return;
     }
     final enteredTitle = _titleInputController.text;
@@ -38,10 +37,10 @@ class _NewTransactionState extends State<NewTransaction> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
-    ).then((pickedDate){
-      if(pickedDate == null){
+    ).then((pickedDate) {
+      if (pickedDate == null) {
         return;
-      }else{
+      } else {
         setState(() {
           _selectedDate = pickedDate;
         });
@@ -50,32 +49,39 @@ class _NewTransactionState extends State<NewTransaction> {
   }
 
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              controller: _titleInputController,
-              onSubmitted: (_) => _submitedData(),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: _amountInputController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitedData(),
-            ),
-            PickDate(_presentDatePicker, _selectedDate),
-            RaisedButton(
-              child: Text('Add'),
-              textColor: Theme.of(context).textTheme.button.color,
-              color: Theme.of(context).primaryColor,
-              onPressed: _submitedData,
-            )
-          ],
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: _titleInputController,
+                onSubmitted: (_) => _submitedData(),
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: _amountInputController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => _submitedData(),
+              ),
+              PickDate(_presentDatePicker, _selectedDate),
+              RaisedButton(
+                child: Text('Add'),
+                textColor: Theme.of(context).textTheme.button.color,
+                color: Theme.of(context).primaryColor,
+                onPressed: _submitedData,
+              )
+            ],
+          ),
         ),
       ),
     );
