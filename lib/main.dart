@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import './widgets/new_transaction.dart';
@@ -111,8 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final _isLandScapMood =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final _mediaQuary = MediaQuery.of(context);
+    final _isLandScapMood = _mediaQuary.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: Text('Personal Expence'),
@@ -125,9 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final _txList = Container(
-      height: (MediaQuery.of(context).size.height -
+      height: (_mediaQuary.size.height -
               appBar.preferredSize.height -
-              MediaQuery.of(context).padding.top) *
+              _mediaQuary.padding.top) *
           0.7,
       child: TransactionList(_userTransactions, _removeTransaction),
     );
@@ -144,7 +145,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('Show chart'),
-                  Switch(
+                  Switch.adaptive(
+                      activeColor: Theme.of(context).accentColor,
                       value: _showChart,
                       onChanged: (val) {
                         setState(() {
@@ -155,9 +157,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             if (!_isLandScapMood)
               Container(
-                height: (MediaQuery.of(context).size.height -
+                height: (_mediaQuary.size.height -
                         appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
+                        _mediaQuary.padding.top) *
                     0.3,
                 child: Chart(_recentTransaction),
               ),
@@ -165,9 +167,9 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_isLandScapMood)
               _showChart
                   ? Container(
-                      height: (MediaQuery.of(context).size.height -
+                      height: (_mediaQuary.size.height -
                               appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
+                              _mediaQuary.padding.top) *
                           0.7,
                       child: Chart(_recentTransaction),
                     )
@@ -176,10 +178,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
-      ),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewTransaction(context),
+            ),
     );
   }
 }
