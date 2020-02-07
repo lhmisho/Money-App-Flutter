@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './pick_date.dart';
+import 'package:intl/intl.dart';
+import './adaptive_flast_button.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function transactionHandler;
@@ -73,7 +74,19 @@ class _NewTransactionState extends State<NewTransaction> {
                 keyboardType: TextInputType.number,
                 onSubmitted: (_) => _submitedData(),
               ),
-              PickDate(_presentDatePicker, _selectedDate),
+              Container(
+                height: 70,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(_selectedDate == null
+                          ? 'No date choosen'
+                          : 'Picked date ${DateFormat.yMd().format(_selectedDate)}'),
+                    ),
+                    AdaptiveFlatButton('Choose Date', _presentDatePicker)
+                  ],
+                ),
+              ),
               RaisedButton(
                 child: Text('Add'),
                 textColor: Theme.of(context).textTheme.button.color,
