@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,14 +18,22 @@ class PickDate extends StatelessWidget {
                 ? 'No date choosen'
                 : 'Picked date ${DateFormat.yMd().format(selectedDate)}'),
           ),
-          FlatButton(
-            textColor: Theme.of(context).primaryColor,
-            child: Text(
-              'Choose date',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onPressed: picker,
-          )
+          Platform.isIOS
+              ? CupertinoButton(
+                child: Text(
+                    'Choose date',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                onPressed: picker,
+              )
+              : FlatButton(
+                  textColor: Theme.of(context).primaryColor,
+                  child: Text(
+                    'Choose date',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: picker,
+                )
         ],
       ),
     );
