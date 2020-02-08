@@ -110,6 +110,52 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  List<Widget> _buildLandScapContent(
+      MediaQueryData _mediaQuery, AppBar appBar, Widget _txList) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Show chart',
+            style: Theme.of(context).textTheme.title,
+          ),
+          Switch.adaptive(
+              activeColor: Theme.of(context).accentColor,
+              value: _showChart,
+              onChanged: (val) {
+                setState(() {
+                  _showChart = val;
+                });
+              }),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (_mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      _mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransaction),
+            )
+          : _txList
+    ];
+  }
+
+  List<Widget> _buildPortraitContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget _txList) {
+    return [
+      Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.3,
+        child: Chart(_recentTransaction),
+      ),
+      _txList
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final _mediaQuary = MediaQuery.of(context);
@@ -153,42 +199,17 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (_isLandScapMood)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Show chart',
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                  Switch.adaptive(
-                      activeColor: Theme.of(context).accentColor,
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                        });
-                      }),
-                ],
+              ..._buildLandScapContent(
+                _mediaQuary,
+                appBar,
+                _txList,
               ),
             if (!_isLandScapMood)
-              Container(
-                height: (_mediaQuary.size.height -
-                        appBar.preferredSize.height -
-                        _mediaQuary.padding.top) *
-                    0.3,
-                child: Chart(_recentTransaction),
+              ..._buildPortraitContent(
+                _mediaQuary,
+                appBar,
+                _txList,
               ),
-            if (!_isLandScapMood) _txList,
-            if (_isLandScapMood)
-              _showChart
-                  ? Container(
-                      height: (_mediaQuary.size.height -
-                              appBar.preferredSize.height -
-                              _mediaQuary.padding.top) *
-                          0.7,
-                      child: Chart(_recentTransaction),
-                    )
-                  : _txList,
           ],
         ),
       ),
